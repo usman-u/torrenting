@@ -124,16 +124,13 @@ services:
 
 
   audiobookshelf:
-    environment:
-      - AUDIOBOOKSHELF_UID=99
-      - AUDIOBOOKSHELF_GID=100
     ports:
       - '13378:80'
     volumes:
       - './abs/abs_data:/config'
       - './abs/metadata:/metadata'
       - '${MEDIA}Audiobooks/:/audiobooks'
-      - '${MEDIA}/Podcasts/:/podcasts'
+      - '${MEDIA}Podcasts/:/podcasts'
     container_name: audiobookshelf
     image: ghcr.io/advplyr/audiobookshelf
     restart: unless-stopped
@@ -217,3 +214,19 @@ services:
       - ./jackett:/config
     network_mode: service:vpn
     restart: unless-stopped
+
+  readarr:
+    image: lscr.io/linuxserver/readarr:nightly
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ./readerr:/config
+      - ${MEDIA}/Audiobooks:/books #optional
+      - ${DOWNLOADS}:/downloads #optional
+    ports:
+      - 8787:8787
+    restart: unless-stopped
+
